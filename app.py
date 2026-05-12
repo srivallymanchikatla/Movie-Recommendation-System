@@ -1,9 +1,17 @@
 import streamlit as st
 import pickle
 import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
-movies = pickle.load(open('movies.pkl', 'rb'))
-similarity = pickle.load(open('similarity.pkl', 'rb'))
+movies_dict = pickle.load(open('movies.pkl', 'rb'))
+movies = pd.DataFrame(movies_dict)
+
+cv = CountVectorizer(max_features=5000, stop_words='english')
+
+vectors = cv.fit_transform(movies['tags']).toarray()
+
+similarity = cosine_similarity(vectors)
 
 st.title("🎬 Movie Recommendation System")
 
